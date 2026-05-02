@@ -1,11 +1,24 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import HeroSection from '../components/HeroSection.astro';
+import BentoGrid from '../components/BentoGrid.astro';
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Janson Lab - 工业级前沿探索">
+  
+  <HeroSection 
+    title="Project Wooting" 
+    subtitle="Pro." 
+    description="304 不锈钢配重架构，极致敲击响应与声学抑制。"
+    theme="dark"
+  >
+    <div class="absolute bottom-[-10%] w-[90%] md:w-[60%] max-w-4xl h-[60%] bg-gradient-to-t from-neutral-800 to-neutral-900 rounded-t-[3rem] border border-neutral-700/50 shadow-2xl overflow-hidden flex justify-center items-end pb-8">
+      <span class="text-neutral-600 font-mono text-sm tracking-widest">WIP_RENDER_V1.OBJ</span>
+    </div>
+  </HeroSection>
+
+  <div class="w-full h-px bg-neutral-900"></div>
+
+  <BentoGrid />
+
 </Layout>

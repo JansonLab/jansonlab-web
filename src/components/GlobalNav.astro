@@ -1,0 +1,84 @@
+---
+const links = [
+  { text: 'Projects', href: '/projects' },
+  { text: 'Lab Notes', href: '/LabNotes' },
+  { text: 'Studio', href: '/studio' },
+  { text: 'About', href: '/about' },
+  { text: 'Contact', href: '/contact' },
+];
+---
+
+<nav class="fixed top-0 w-full z-50 bg-[#1d1d1f]/80 backdrop-blur-md border-b border-neutral-800">
+  <div class="max-w-5xl mx-auto px-4 h-12 flex items-center justify-between text-xs font-medium text-neutral-300 tracking-wide">
+    
+    <a href="/" class="hover:text-white transition-colors flex items-center relative z-50">
+      <span class="text-sm font-bold tracking-widest uppercase text-white">Janson Lab</span>
+    </a>
+    
+    <div class="hidden md:flex space-x-8">
+      {links.map((link) => (
+        <a href={link.href} class="hover:text-white transition-colors duration-300">
+          {link.text}
+        </a>
+      ))}
+    </div>
+
+    <div class="md:hidden flex items-center relative z-50">
+      <button id="mobile-menu-btn" class="text-neutral-300 hover:text-white focus:outline-none" aria-label="Toggle Menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path id="menu-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="hidden md:flex items-center">
+       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+    </div>
+  </div>
+
+  <div id="mobile-menu-overlay" class="hidden absolute top-0 left-0 w-full h-screen bg-black pt-20 px-6 z-40 flex-col space-y-6">
+    {links.map((link) => (
+      <a href={link.href} class="text-white text-2xl font-semibold border-b border-neutral-800 pb-4 hover:text-gray-400 transition-colors">
+        {link.text}
+      </a>
+    ))}
+  </div>
+</nav>
+
+<script>
+  // 获取 DOM 元素
+  const btn = document.getElementById('mobile-menu-btn');
+  const overlay = document.getElementById('mobile-menu-overlay');
+  const iconPath = document.getElementById('menu-icon-path');
+
+  // 定义 SVG 的路径数据：汉堡(打开) 和 叉号(关闭)
+  const pathMenu = "M4 6h16M4 12h16M4 18h16";
+  const pathClose = "M6 18L18 6M6 6l12 12";
+
+  // 确保元素存在后再绑定事件
+  if (btn && overlay && iconPath) {
+    btn.addEventListener('click', () => {
+      const isHidden = overlay.classList.contains('hidden');
+      
+      if (isHidden) {
+        // 动作 1：展开菜单
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+        // 动作 2：图标变成 X
+        iconPath.setAttribute('d', pathClose);
+        // 动作 3：锁死底层 body 滚动，防止菜单内滑动时底层也跟着滑动
+        document.body.style.overflow = 'hidden';
+      } else {
+        // 动作 1：收起菜单
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+        // 动作 2：图标变回三道杠
+        iconPath.setAttribute('d', pathMenu);
+        // 动作 3：恢复底层滚动
+        document.body.style.overflow = '';
+      }
+    });
+  }
+</script>
