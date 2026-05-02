@@ -1,28 +1,50 @@
 ---
 interface Props {
   title: string;
-  subtitle: string;
-  description: string;
-  theme?: 'dark' | 'light';
-  bgImage?: string;
+  description: string; // 移除了 subtitle，仅保留一句话简介
 }
 
-const { title, subtitle, description, theme = 'dark', bgImage } = Astro.props;
-const textColor = theme === 'dark' ? 'text-white' : 'text-black';
+const { title, description } = Astro.props;
 ---
 
-<section class={`relative w-full h-[85vh] flex flex-col items-center pt-32 ${textColor} overflow-hidden`} style={bgImage ? `background-image: url(${bgImage}); background-size: cover; background-position: center;` : 'background-color: #000;'}>
+<section class="relative w-full flex flex-col items-center justify-center pt-32 pb-16 md:pt-40 md:pb-24 px-6 bg-transparent overflow-hidden">
   
-  <div class="z-10 text-center flex flex-col items-center">
-    <h2 class="text-5xl md:text-6xl font-semibold tracking-tight mb-2">{title}</h2>
-    <p class="text-xl md:text-2xl text-red-500 font-normal mb-4">{subtitle}</p>
-    <p class="text-lg md:text-xl text-gray-400 mb-6">{description}</p>
+  <div class="z-10 text-center max-w-4xl mx-auto flex flex-col items-center">
     
-    <div class="flex space-x-4 mt-2">
-      <a href="#" class="bg-white text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition">Learn more</a>
-      <a href="#" class="bg-transparent border border-white text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-black transition">Buy</a>
+    <!-- 主标题：复刻 Vue 官网的经典 绿->蓝紫 渐变色，以及更重的字重 -->
+    <h1 class="text-5xl md:text-7xl font-black tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#42d392] to-[#647eff]">
+      {title}
+    </h1>
+
+    <!-- 一句话简介：使用偏白的浅灰色，字号适中，增加行高 -->
+    <p class="text-xl md:text-2xl text-[#ebebeb]/70 font-medium max-w-3xl mb-10 leading-relaxed">
+      {description}
+    </p>
+    
+    <!-- 操作按钮组：复刻 Vue 的小圆角矩形按钮和配色 -->
+    <div class="flex flex-wrap justify-center gap-4 text-[15px]">
+      
+      <!-- 主按钮：Vue 绿底 + 深色文字 + 播放小图标 -->
+      <a href="/projects" class="flex items-center px-5 py-2.5 bg-[#42d392] hover:bg-[#33a06f] text-[#213547] font-bold rounded-lg transition-colors duration-200">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+        Explore Projects
+      </a>
+
+      <!-- 次按钮：深灰底色 + 浅色文字 + 箭头小图标 -->
+      <a href="/about" class="flex items-center px-5 py-2.5 bg-[#313136] hover:bg-[#414141] text-white font-semibold rounded-lg transition-colors duration-200">
+        Get Started
+        <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+      </a>
+
+      <!-- 第三按钮：同为深灰底色 (类似 Vue 官网的 Install 按钮) -->
+      <a href="https://github.com/jansonwang" class="flex items-center px-5 py-2.5 bg-[#313136] hover:bg-[#414141] text-white font-semibold rounded-lg transition-colors duration-200">
+        View on GitHub
+      </a>
     </div>
   </div>
+
+  <!-- 背景光晕：调整为极其微弱的 绿蓝混合光晕，贴近 Vue 的高级黑底质感 -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-r from-[#42d392]/10 to-[#647eff]/10 blur-[100px] rounded-full pointer-events-none -z-10"></div>
 
   <slot />
 </section>

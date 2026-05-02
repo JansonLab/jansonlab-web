@@ -1,15 +1,17 @@
+// src/i18n/ui.ts
+
+import { en } from './locales/en';
+import { zh } from './locales/zh';
+
 export const languages = {
-  zh: '简体中文',
   en: 'English',
+  zh: '简体中文',
+  //  ja: '日本語', // 未来只需在这里加一行
 };
 
+export const defaultLang = 'en';
+
 export const ui = {
-  zh: {
-    'nav.projects': '项目库',
-    'nav.notes': '实验室日志',
-  },
-  en: {
-    'nav.projects': 'Projects',
-    'nav.notes': 'Lab Notes',
-  },
+  en,
+  zh,
 } as const;

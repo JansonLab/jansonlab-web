@@ -1,43 +1,54 @@
 ---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+// 1. 初始化多语言工具
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
+
 <section class="max-w-5xl mx-auto px-4 py-24">
   <div class="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-4 md:gap-6 auto-rows-[250px]">
     
+    <!-- 卡片 1: LC Oscillator -->
     <div class="md:col-span-2 md:row-span-1 rounded-3xl bg-neutral-900 border border-neutral-800 p-8 flex flex-col justify-end relative overflow-hidden group hover:border-neutral-700 transition-colors">
-      <div class="absolute inset-0 opacity-20 bg-[url('/images/oscilloscope-grid.svg')] bg-cover"></div> <div class="z-10">
-        <h3 class="text-white text-2xl font-semibold tracking-tight">LC Oscillator</h3>
-        <p class="text-neutral-400 mt-2">从晶体管向上构建。高精度硬件波形与振荡原理的深度剖析，即将上线。</p>
+      <div class="absolute inset-0 opacity-20 bg-[url('/images/oscilloscope-grid.svg')] bg-cover"></div> 
+      <div class="z-10">
+        <h3 class="text-white text-2xl font-semibold tracking-tight">{t('bento.oscillator.title')}</h3>
+        <p class="text-neutral-400 mt-2">{t('bento.oscillator.desc')}</p>
       </div>
     </div>
 
+    <!-- 卡片 2: Bambu Lab -->
     <div class="rounded-3xl bg-neutral-900 border border-neutral-800 p-8 flex flex-col justify-between hover:border-neutral-700 transition-colors">
       <div class="text-neutral-500">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
       </div>
       <div>
-        <h3 class="text-white text-lg font-medium">Bambu Lab P2S</h3>
-        <p class="text-neutral-400 text-sm mt-1">碳纤维复合材料工程化验证中。</p>
+        <h3 class="text-white text-lg font-medium">{t('bento.bambu.title')}</h3>
+        <p class="text-neutral-400 text-sm mt-1">{t('bento.bambu.desc')}</p>
       </div>
     </div>
 
+    <!-- 卡片 3: 名言 -->
     <div class="rounded-3xl bg-black border border-neutral-800 p-8 flex flex-col justify-center items-center text-center hover:border-neutral-700 transition-colors">
       <blockquote class="text-neutral-300 font-serif italic text-lg leading-relaxed">
-        "The important thing is not to stop questioning. Curiosity has its own reason for existing."
+        {t('bento.quote.text')}
       </blockquote>
-      <span class="text-neutral-600 text-sm mt-4 tracking-widest uppercase">— Albert Einstein</span>
+      <span class="text-neutral-600 text-sm mt-4 tracking-widest uppercase">{t('bento.quote.author')}</span>
     </div>
 
-<div class="md:col-span-2 rounded-3xl bg-gradient-to-br from-neutral-900 to-black border border-neutral-800 p-8 flex flex-col justify-between group hover:border-neutral-700 transition-colors">
+    <!-- 卡片 4: 社交与状态 -->
+    <div class="md:col-span-2 rounded-3xl bg-gradient-to-br from-neutral-900 to-black border border-neutral-800 p-8 flex flex-col justify-between group hover:border-neutral-700 transition-colors">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-2 text-neutral-400">
           <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
-          <span class="text-sm font-medium tracking-wider uppercase">Signal Active</span>
+          <span class="text-sm font-medium tracking-wider uppercase">{t('bento.social.active')}</span>
         </div>
         <div class="flex items-center space-x-5 text-neutral-500">
-		  <a href="https://youtube.com/@JansonLabTech" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors duration-300">
+          <a href="https://youtube.com/@JansonLabTech" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors duration-300">
             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
           </a>
-		  <a href="https://github.com/jansonlab" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors duration-300">
+          <a href="https://github.com/jansonlab" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors duration-300">
             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
           </a>
           <a href="https://x.com/JansonLab" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors duration-300">
@@ -48,11 +59,9 @@
       <div class="mt-8">
         <h3 class="text-white text-2xl font-semibold mb-2">@JansonLabTech</h3>
         <p class="text-neutral-500 text-sm md:text-base max-w-md">
-          探讨计算机底层架构、高精度硬件工程与 Emacs Lisp 的技术自留地。项目源码及视频日志保持同步更新。
+          {t('bento.social.desc')}
         </p>
       </div>
     </div>
-
-
   </div>
 </section>

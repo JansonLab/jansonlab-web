@@ -1,46 +1,37 @@
-# Astro Starter Kit: Basics
+# Janson Lab Official Website
 
-```sh
-npm create astro@latest -- --template basics
-```
+> **Software Defined, Hardware Refined.**
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Janson Lab (简森实验室) 的官方门户网站源代码。这是一个致力于全栈硬件开发、精密电源系统及高频电路研究的独立工程空间。我们秉承“从沙子到系统”的哲学，记录从底层原型到高性系统的造物过程。
 
-## 🚀 Project Structure
+## 🛠️ 技术栈 (Stack)
 
-Inside of your Astro project, you'll see the following folders and files:
+本站基于现代 Web 技术栈构建，追求极致的加载性能与极简的视觉交互：
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+- **Framework:** [Astro](https://astro.build/) (Static Site Generation)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) (Vue.js Inspired Aesthetic)
+- **I18n:** 自研字典驱动型多语言架构 (支持 EN/ZH，具备 O(1) 扩展性)
+- **Workflow:** Crafted within **Ubuntu** using **Emacs** & **Magit**
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 🏗️ 核心理念 (Core Philosophy)
 
-## 🧞 Commands
+- **From Sand to Systems:** 从 21700 电芯的能量管理到 LC 振荡器的频率控制。
+- **Transparent Prototyping:** 文档化硬件原型的每一个迭代瞬间。
+- **Developer Culture:** 植根于开源工具链的硬核 Maker 文化。
 
-All commands are run from the root of the project, from a terminal:
+## 🚀 快速开始 (Getting Started)
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+### 环境要求
+- Node.js (v18.0 或更高版本)
+- npm / pnpm / yarn
 
-## 👀 Want to learn more?
+### 本地开发
+```bash
+# 克隆仓库
+git clone [https://github.com/jansonwang/jansonlab-web.git](https://github.com/jansonwang/jansonlab-web.git)
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev

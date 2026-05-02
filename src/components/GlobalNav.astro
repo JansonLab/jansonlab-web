@@ -1,84 +1,181 @@
 ---
+import { languages, defaultLang } from '../i18n/ui';
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+
+// 1. 初始化多语言工具
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+// 2. 提取当前裸路径 (如 /zh/projects 提取为 /projects)
+const basePath = Astro.url.pathname.replace(new RegExp(`^/(${Object.keys(languages).join('|')})`), '') || '/';
+
+// 3. 导航链接配置 (通过 t() 动态读取字典)
 const links = [
-  { text: 'Projects', href: '/projects' },
-  { text: 'Lab Notes', href: '/LabNotes' },
-  { text: 'Studio', href: '/studio' },
-  { text: 'About', href: '/about' },
-  { text: 'Contact', href: '/contact' },
+  { text: t('nav.projects'), href: translatePath('/projects') },
+  { text: t('nav.notes'), href: translatePath('/LabNotes') },
+  { text: t('nav.studio'), href: translatePath('/studio') },
+  { text: t('nav.about'), href: translatePath('/about') },
 ];
+
+// 4. 动态生成多语言下拉选项
+const langOptions = Object.entries(languages).map(([code, name]) => ({
+  code,
+  name,
+  path: code === defaultLang ? basePath : `/${code}${basePath}`
+}));
+
+const currentPath = Astro.url.pathname;
 ---
 
-<nav class="fixed top-0 w-full z-50 bg-[#1d1d1f]/80 backdrop-blur-md border-b border-neutral-800">
-  <div class="max-w-5xl mx-auto px-4 h-12 flex items-center justify-between text-xs font-medium text-neutral-300 tracking-wide">
+<nav class="fixed top-0 w-full z-50 bg-[#1a1a1a]/90 backdrop-blur border-b border-[#2f2f2f] text-[14px] font-medium text-neutral-300">
+  <div class="max-w-[1376px] mx-auto px-4 lg:px-6 h-[55px] flex items-center justify-between">
     
-    <a href="/" class="hover:text-white transition-colors flex items-center relative z-50">
-      <span class="text-sm font-bold tracking-widest uppercase text-white">Janson Lab</span>
-    </a>
-    
-    <div class="hidden md:flex space-x-8">
-      {links.map((link) => (
-        <a href={link.href} class="hover:text-white transition-colors duration-300">
-          {link.text}
-        </a>
-      ))}
+    <!-- 左侧：Logo 与 主导航 -->
+    <div class="flex items-center h-full">
+      <a href={translatePath('/')} class="hover:opacity-80 transition-opacity flex items-center mr-8">
+        <span class="font-bold text-[16px] text-white">Janson Lab</span>
+      </a>
+      
+      <div class="hidden md:flex items-center space-x-1 h-full">
+        {links.map((link) => {
+          const isActive = currentPath === link.href || currentPath === `${link.href}/`;
+          return (
+            <a 
+              href={link.href} 
+              class={`h-full flex items-center px-3 transition-colors duration-200 border-b-2
+                ${isActive 
+                  ? 'border-[#42b883] text-[#42b883]' 
+                  : 'border-transparent hover:text-white'}`
+              }
+            >
+              {link.text}
+            </a>
+          );
+        })}
+      </div>
     </div>
 
-    <div class="md:hidden flex items-center relative z-50">
-      <button id="mobile-menu-btn" class="text-neutral-300 hover:text-white focus:outline-none" aria-label="Toggle Menu">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <!-- 右侧：工具栏 -->
+    <div class="flex items-center space-x-4 h-full">
+      
+      <!-- 搜索框 (桌面端) -->
+      <button class="hidden lg:flex items-center bg-[#242424] hover:bg-[#2a2a2a] border border-[#3a3a3a] rounded-md px-3 py-1.5 text-xs text-neutral-400 transition-colors">
+        <svg class="w-3.5 h-3.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        {t('nav.search')}
+        <span class="ml-8 border border-[#444] rounded px-1 text-[10px]">Ctrl K</span>
+      </button>
+
+      <div class="hidden md:block w-[1px] h-[24px] bg-[#2f2f2f] mx-2"></div>
+
+      <!-- 语言切换下拉框 (桌面端与移动端共用) -->
+      <div class="relative h-full flex items-center">
+        <button id="lang-menu-btn" class="text-neutral-400 hover:text-white transition-colors px-2" aria-label="Translate">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>
+          </svg>
+        </button>
+
+        <div id="lang-dropdown" class="hidden absolute top-[48px] right-0 w-[200px] bg-[#1a1a1a] border border-[#2f2f2f] rounded-lg shadow-xl overflow-hidden text-[13px]">
+          <div class="py-2">
+            {langOptions.map((opt) => (
+              <a href={opt.path} class="flex items-center justify-between px-4 py-2 hover:bg-[#42b883]/10 hover:text-[#42b883] transition-colors">
+                <span class={lang === opt.code ? "text-[#42b883] font-bold" : ""}>
+                  {opt.name}
+                </span>
+                <svg class="w-4 h-4 opacity-50" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+              </a>
+            ))}
+          </div>
+          <div class="border-t border-[#2f2f2f] p-2">
+            <a href="https://github.com/jansonwang" target="_blank" class="block px-2 py-2 text-neutral-400 hover:text-white transition-colors">
+              {t('nav.translate')}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="hidden md:block w-[1px] h-[24px] bg-[#2f2f2f] mx-2"></div>
+
+      <!-- 社交媒体 Icon (桌面端) -->
+      <div class="hidden md:flex items-center space-x-3 text-neutral-400">
+        <a href="https://github.com/jansonwang" target="_blank" class="hover:text-white transition-colors" aria-label="GitHub">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+        </a>
+      </div>
+
+      <!-- 移动端汉堡菜单 -->
+      <button id="mobile-menu-btn" class="md:hidden text-neutral-300 hover:text-white ml-2">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path id="menu-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
       </button>
     </div>
-
-    <div class="hidden md:flex items-center">
-       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-        </svg>
-    </div>
   </div>
 
-  <div id="mobile-menu-overlay" class="hidden absolute top-0 left-0 w-full h-screen bg-black pt-20 px-6 z-40 flex-col space-y-6">
+  <!-- 移动端全屏菜单 -->
+  <div id="mobile-menu-overlay" class="hidden absolute top-[55px] left-0 w-full h-[calc(100vh-55px)] bg-[#1a1a1a] p-6 z-40 flex-col space-y-4">
     {links.map((link) => (
-      <a href={link.href} class="text-white text-2xl font-semibold border-b border-neutral-800 pb-4 hover:text-gray-400 transition-colors">
+      <a href={link.href} class="text-neutral-300 text-lg font-medium border-b border-[#2f2f2f] pb-3 hover:text-[#42b883] transition-colors">
         {link.text}
       </a>
     ))}
+
+    <!-- 社交媒体区 (移动端显示) -->
+    <div class="pt-2 flex items-center space-x-6 text-neutral-400">
+      <a href="https://github.com/jansonwang" target="_blank" class="hover:text-white transition-colors flex items-center space-x-2">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+        <span class="text-sm font-medium">GitHub</span>
+      </a>
+    </div>
   </div>
 </nav>
 
 <script>
-  // 获取 DOM 元素
-  const btn = document.getElementById('mobile-menu-btn');
-  const overlay = document.getElementById('mobile-menu-overlay');
-  const iconPath = document.getElementById('menu-icon-path');
+  function initNav() {
+    const langBtn = document.getElementById('lang-menu-btn');
+    const langDropdown = document.getElementById('lang-dropdown');
 
-  // 定义 SVG 的路径数据：汉堡(打开) 和 叉号(关闭)
-  const pathMenu = "M4 6h16M4 12h16M4 18h16";
-  const pathClose = "M6 18L18 6M6 6l12 12";
+    // 语言下拉菜单点击逻辑
+    if (langBtn && langDropdown) {
+      langBtn.onclick = (e) => {
+        e.stopPropagation();
+        langDropdown.classList.toggle('hidden');
+      };
 
-  // 确保元素存在后再绑定事件
-  if (btn && overlay && iconPath) {
-    btn.addEventListener('click', () => {
-      const isHidden = overlay.classList.contains('hidden');
-      
-      if (isHidden) {
-        // 动作 1：展开菜单
-        overlay.classList.remove('hidden');
-        overlay.classList.add('flex');
-        // 动作 2：图标变成 X
-        iconPath.setAttribute('d', pathClose);
-        // 动作 3：锁死底层 body 滚动，防止菜单内滑动时底层也跟着滑动
-        document.body.style.overflow = 'hidden';
-      } else {
-        // 动作 1：收起菜单
-        overlay.classList.add('hidden');
-        overlay.classList.remove('flex');
-        // 动作 2：图标变回三道杠
-        iconPath.setAttribute('d', pathMenu);
-        // 动作 3：恢复底层滚动
-        document.body.style.overflow = '';
-      }
-    });
+      document.addEventListener('click', (e) => {
+        if (!langDropdown.contains(e.target as Node) && !langBtn.contains(e.target as Node)) {
+          langDropdown.classList.add('hidden');
+        }
+      });
+    }
+
+    // 移动端汉堡菜单逻辑
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const overlay = document.getElementById('mobile-menu-overlay');
+    const iconPath = document.getElementById('menu-icon-path');
+    const pathMenu = "M4 6h16M4 12h16M4 18h16";
+    const pathClose = "M6 18L18 6M6 6l12 12";
+
+    if (mobileBtn && overlay && iconPath) {
+      mobileBtn.onclick = () => {
+        const isHidden = overlay.classList.contains('hidden');
+        if (isHidden) {
+          overlay.classList.remove('hidden');
+          overlay.classList.add('flex');
+          iconPath.setAttribute('d', pathClose);
+          document.body.style.overflow = 'hidden';
+        } else {
+          overlay.classList.add('hidden');
+          overlay.classList.remove('flex');
+          iconPath.setAttribute('d', pathMenu);
+          document.body.style.overflow = '';
+        }
+      };
+    }
   }
+
+  // 初始化并在 View Transitions 触发时重新绑定
+  initNav();
+  document.addEventListener('astro:page-load', initNav);
 </script>

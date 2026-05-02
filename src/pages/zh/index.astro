@@ -1,8 +1,8 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import HeroSection from '../components/HeroSection.astro';
-import BentoGrid from '../components/BentoGrid.astro';
-import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import Layout from '../../layouts/Layout.astro';
+import HeroSection from '../../components/HeroSection.astro';
+import BentoGrid from '../../components/BentoGrid.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 
 // 1. 初始化多语言工具
 const lang = getLangFromUrl(Astro.url);
@@ -17,7 +17,7 @@ const t = useTranslations(lang);
   >
   </HeroSection>
 
-  <div class="w-full h-px bg-neutral-900"></div>
+  <!-- <div class="w-full h-px bg-neutral-900"></div> -->
   
   <BentoGrid />
 

@@ -3,32 +3,49 @@ import GlobalNav from '../components/GlobalNav.astro';
 import '../styles/global.css';
 
 interface Props {
-	title: string;
+  title: string;
+  description?: string; // 设置为可选参数，允许单独的页面覆盖默认描述
 }
-const { title } = Astro.props;
+
+const { title, description } = Astro.props;
+
+// 1. 自动嗅探当前路径的语言
+const { pathname } = Astro.url;
+const lang = pathname.startsWith('/zh') ? 'zh' : 'en';
+
+// 2. 映射标准的 HTML lang 属性
+const htmlLang = lang === 'zh' ? 'zh-CN' : 'en';
+
+// 3. 设置多语言默认 SEO 描述
+const defaultDescription = lang === 'zh' 
+  ? 'Janson Lab - 探索前沿硬件与软件开发，全栈 Maker 实验室' 
+  : 'Janson Lab - Exploring frontier hardware and software development, a full-stack Maker lab.';
+
+const finalDescription = description || defaultDescription;
 ---
 
 <!doctype html>
-<html lang="zh-CN">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="Janson Lab - 探索前沿科技" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<title>{title}</title>
-	</head>
-	<body class="bg-black text-white antialiased selection:bg-gray-700">
-		<GlobalNav />
-		<main>
-			<slot />
-		</main>
-	</body>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={finalDescription} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class="bg-[#121212] text-white antialiased selection:bg-[#42b883]/30 selection:text-[#42b883]">
+    <GlobalNav />
+    <main>
+      <slot />
+    </main>
+  </body>
 </html>
 
 <style is:global>
-	/* 逼近苹果的 SF Pro 字体栈 */
-	html {
-		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-		letter-spacing: -0.015em;
-	}
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    letter-spacing: -0.015em;
+    /* 建议添加平滑滚动，对长页面的锚点跳转很友好 */
+    scroll-behavior: smooth; 
+  }
 </style>
