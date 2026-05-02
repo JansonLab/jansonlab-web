@@ -1,11 +1,8 @@
-# .github/workflows/deploy.yml
 name: Deploy to GitHub Pages
 
 on:
-  # 监听 main 分支的 push 操作
   push:
     branches: [ main ]
-  # 允许手动触发构建
   workflow_dispatch:
 
 permissions:
@@ -20,10 +17,22 @@ jobs:
       - name: Checkout your repository
         uses: actions/checkout@v4
 
-      - name: Install, build, and upload your site
-        uses: withastro/action@v2
-        # 注意：这里会自动识别你的依赖管理工具（npm, pnpm 或 yarn）
-        # 它会执行 npm install && npm run build
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build with Astro
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist # 确保与你本地构建日志中的目录一致
 
   deploy:
     needs: build
